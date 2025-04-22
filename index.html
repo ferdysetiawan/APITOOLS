@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple API Tester</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #fff;
+      color: #333;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    input, textarea, select, button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      background-color: #fff;
+      color: #000;
+    }
+
+    .dark-mode input,
+    .dark-mode textarea,
+    .dark-mode select,
+    .dark-mode button {
+      background-color: #1e1e1e;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .auth-group input {
+      width: calc(50% - 10px);
+      display: inline-block;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 10px 0;
+      padding: 8px 12px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .dark-mode .radio-group {
+      background-color: #1e1e1e;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .radio-group input[type="radio"] {
+      margin: 0;
+      accent-color: #007bff;
+    }
+
+    @media (max-width: 600px) {
+      .radio-group {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .auth-group input {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+
+    #darkModeToggle {
+      margin-bottom: 20px;
+      padding: 8px 16px;
+      cursor: pointer;
+      background-color: #eee;
+      border: none;
+      border-radius: 6px;
+    }
+
+    .dark-mode #darkModeToggle {
+      background-color: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    <h1>Simple API Tester</h1>
+    <label for="method">Method</label>
+    <select id="method">
+      <option>GET</option>
+      <option>POST</option>
+      <option>PUT</option>
+      <option>PATCH</option>
+      <option>DELETE</option>
+      <option>OPTIONS</option>
+      <option>HEAD</option>
+    </select>
+
+    <label for="url">URL</label>
+    <input type="text" id="url" placeholder="https://api.example.com/data" />
+
+    <label>Authorization</label>
+    <div class="radio-group">
+      <label><input type="radio" name="auth" value="none" checked onclick="toggleAuth()"> None</label>
+      <label><input type="radio" name="auth" value="bearer" onclick="toggleAuth()"> Bearer Token</label>
+      <label><input type="radio" name="auth" value="basic" onclick="toggleAuth()"> Basic Auth</label>
+      <label><input type="radio" name="auth" value="custom" onclick="toggleAuth()"> Custom</label>
+    </div>
+
+    <div id="authFields"></div>
+
+    <label for="headers">Headers (JSON format)</label>
+    <textarea id="headers" rows="4" placeholder='{"Content-Type": "application/json"}'></textarea>
+
+    <label for="body">Body (for POST/PUT/PATCH)</label>
+    <textarea id="body" rows="6" placeholder='{"name": "John"}'></textarea>
+
+    <button onclick="sendRequest()">Send Request</button>
+    <label for="response">Response</label>
+    <textarea id="response" rows="10" readonly></textarea>
+  </div>
+
+  <script>
+    function toggleAuth() {
+      const auth = document.querySelector('input[name="auth"]:checked').value;
+      const container = document.getElementById('authFields');
+      container.innerHTML = '';
+      if (auth === 'bearer') {
+        container.innerHTML = '<input type="text" id="bearerToken" placeholder="Bearer Token">';
+      } else if (auth === 'basic') {
+        container.innerHTML = '<div class="auth-group">' +
+          '<input type="text" id="username" placeholder="Username">' +
+          '<input type="password" id="password" placeholder="Password">' +
+          '</div>';
+      } else if (auth === 'custom') {
+        container.innerHTML = '<input type="text" id="customAuth" placeholder="Authorization">';
+      }
+    }
+
+    function sendRequest() {
+      const method = document.getElementById('method').value;
+      const url = document.getElementById('url').value;
+      const headersInput = document.getElementById('headers').value;
+      let headers;
+      try {
+        headers = headersInput ? JSON.parse(headersInput) : {};
+      } catch (e) {
+        document.getElementById('response').value = 'Invalid headers JSON';
+        return;
+      }
+      const body = document.getElementById('body').value;
+      const auth = document.querySelector('input[name="auth"]:checked').value;
+
+      if (auth === 'bearer') {
+        headers['Authorization'] = 'Bearer ' + document.getElementById('bearerToken').value;
+      } else if (auth === 'basic') {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+        headers['Authorization'] = 'Basic ' + btoa(user + ':' + pass);
+      } else if (auth === 'custom') {
+        headers['Authorization'] = document.getElementById('customAuth').value;
+      }
+
+      fetch(url, {
+        method,
+        headers,
+        body: ["GET", "HEAD"].includes(method) ? null : body
+      })
+      .then(res => res.text())
+      .then(text => document.getElementById('response').value = text)
+      .catch(err => document.getElementById('response').value = 'Error: ' + err);
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const btn = document.getElementById('darkModeToggle');
+      btn.textContent = document.body.classList.contains('dark-mode') ? '🌞 Light Mode' : '🌙 Dark Mode';
+    }
+  </script>
+</body>
+</html>
