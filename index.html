@@ -1,208 +1,2019 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simple API Tester</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANTARAPI</title>
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ferdysetiawan/ferdysetiawan.github.io/refs/heads/main/public/media/images/icon.png">
+  <meta name="description" content="ANTARAPI — Professional API testing tool with full HTTP method support, authentication, headers management, and response inspection.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #fff;
-      color: #333;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    .dark-mode {
-      background-color: #121212;
-      color: #e0e0e0;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    input, textarea, select, button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
-      background-color: #fff;
-      color: #000;
     }
 
-    .dark-mode input,
-    .dark-mode textarea,
-    .dark-mode select,
-    .dark-mode button {
-      background-color: #1e1e1e;
-      color: #fff;
-      border: 1px solid #555;
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --transition-fast: 150ms ease;
+      --transition-normal: 250ms ease;
     }
 
-    label {
-      margin-top: 10px;
-      font-weight: bold;
+    [data-theme="dark"] {
+      --color-bg-primary: #0A0A0A;
+      --color-bg-secondary: #111111;
+      --color-bg-tertiary: #1A1A1A;
+      --color-surface: #1E1E1E;
+      --color-surface-hover: #252525;
+      --color-surface-active: #2A2A2A;
+      --color-border: #2E2E2E;
+      --color-border-strong: #3A3A3A;
+      --color-text-primary: #E8E8E8;
+      --color-text-secondary: #999999;
+      --color-text-tertiary: #666666;
+      --color-accent: #3B82F6;
+      --color-accent-hover: #2563EB;
+      --color-accent-text: #FFFFFF;
+      --color-success: #22C55E;
+      --color-success-bg: #132B1A;
+      --color-warning: #EAB308;
+      --color-warning-bg: #2B2510;
+      --color-danger: #EF4444;
+      --color-danger-bg: #2B1313;
+      --color-info: #06B6D4;
+      --color-info-bg: #0B2B30;
+      --color-method-get: #22C55E;
+      --color-method-post: #EAB308;
+      --color-method-put: #3B82F6;
+      --color-method-patch: #A855F7;
+      --color-method-delete: #EF4444;
+      --color-method-options: #EC4899;
+      --color-method-head: #06B6D4;
+      --color-json-key: #7DD3FC;
+      --color-json-string: #86EFAC;
+      --color-json-number: #FDE68A;
+      --color-json-boolean: #C4B5FD;
+      --color-json-null: #FDA4AF;
+      --color-scrollbar-track: #1A1A1A;
+      --color-scrollbar-thumb: #333333;
     }
 
-    .auth-group input {
-      width: calc(50% - 10px);
-      display: inline-block;
+    [data-theme="light"] {
+      --color-bg-primary: #F5F5F5;
+      --color-bg-secondary: #EBEBEB;
+      --color-bg-tertiary: #E0E0E0;
+      --color-surface: #FFFFFF;
+      --color-surface-hover: #F0F0F0;
+      --color-surface-active: #E8E8E8;
+      --color-border: #D4D4D4;
+      --color-border-strong: #B0B0B0;
+      --color-text-primary: #1A1A1A;
+      --color-text-secondary: #555555;
+      --color-text-tertiary: #888888;
+      --color-accent: #2563EB;
+      --color-accent-hover: #1D4ED8;
+      --color-accent-text: #FFFFFF;
+      --color-success: #16A34A;
+      --color-success-bg: #DCFCE7;
+      --color-warning: #CA8A04;
+      --color-warning-bg: #FEF9C3;
+      --color-danger: #DC2626;
+      --color-danger-bg: #FEE2E2;
+      --color-info: #0891B2;
+      --color-info-bg: #CFFAFE;
+      --color-method-get: #16A34A;
+      --color-method-post: #CA8A04;
+      --color-method-put: #2563EB;
+      --color-method-patch: #9333EA;
+      --color-method-delete: #DC2626;
+      --color-method-options: #DB2777;
+      --color-method-head: #0891B2;
+      --color-json-key: #0369A1;
+      --color-json-string: #15803D;
+      --color-json-number: #B45309;
+      --color-json-boolean: #7E22CE;
+      --color-json-null: #BE123C;
+      --color-scrollbar-track: #E8E8E8;
+      --color-scrollbar-thumb: #C0C0C0;
     }
 
-    .radio-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin: 10px 0;
-      padding: 8px 12px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-    }
-
-    .dark-mode .radio-group {
-      background-color: #1e1e1e;
-    }
-
-    .radio-group label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      white-space: nowrap;
+    html {
       font-size: 14px;
     }
 
-    .radio-group input[type="radio"] {
-      margin: 0;
-      accent-color: #007bff;
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+      transition: background-color var(--transition-normal), color var(--transition-normal);
     }
 
-    @media (max-width: 600px) {
-      .radio-group {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .auth-group input {
-        width: 100%;
-        margin-bottom: 10px;
-      }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
     }
 
-    #darkModeToggle {
-      margin-bottom: 20px;
-      padding: 8px 16px;
+    ::-webkit-scrollbar-track {
+      background: var(--color-scrollbar-track);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-scrollbar-thumb);
+      border-radius: 4px;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background-color: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .app-logo-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-md);
+      object-fit: contain;
+    }
+
+    .app-logo-text {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      color: var(--color-text-primary);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background-color: var(--color-surface);
+      color: var(--color-text-secondary);
       cursor: pointer;
-      background-color: #eee;
-      border: none;
-      border-radius: 6px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      transition: background-color var(--transition-fast), border-color var(--transition-fast);
     }
 
-    .dark-mode #darkModeToggle {
-      background-color: #333;
-      color: #fff;
+    .theme-toggle:hover {
+      background-color: var(--color-surface-hover);
+      border-color: var(--color-border-strong);
+    }
+
+    .theme-toggle-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .app-main {
+      display: flex;
+      height: calc(100vh - 53px);
+    }
+
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background-color: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-title {
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--color-text-secondary);
+    }
+
+    .sidebar-clear-btn {
+      padding: 4px 8px;
+      font-size: 11px;
+      font-family: var(--font-sans);
+      color: var(--color-text-tertiary);
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .sidebar-clear-btn:hover {
+      color: var(--color-danger);
+      border-color: var(--color-danger);
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    .history-empty {
+      padding: 24px 16px;
+      text-align: center;
+      color: var(--color-text-tertiary);
+      font-size: 12px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background-color var(--transition-fast);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-sans);
+    }
+
+    .history-item:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .history-method {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      min-width: 40px;
+      text-align: center;
+      color: var(--color-accent-text);
+    }
+
+    .history-url {
+      flex: 1;
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .history-status {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .url-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 16px 24px;
+      background-color: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .method-select {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 12px;
+      border: 1px solid var(--color-border);
+      border-right: none;
+      border-radius: var(--radius-md) 0 0 var(--radius-md);
+      background-color: var(--color-surface);
+      color: var(--color-method-get);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      min-width: 110px;
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+
+    .method-select:focus {
+      border-color: var(--color-accent);
+    }
+
+    .url-input {
+      flex: 1;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 10px 14px;
+      border: 1px solid var(--color-border);
+      border-right: none;
+      background-color: var(--color-surface);
+      color: var(--color-text-primary);
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+
+    .url-input:focus {
+      border-color: var(--color-accent);
+    }
+
+    .url-input::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    .send-btn {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      background-color: var(--color-accent);
+      color: var(--color-accent-text);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color var(--transition-fast);
+    }
+
+    .send-btn:hover {
+      background-color: var(--color-accent-hover);
+    }
+
+    .send-btn:disabled {
+      background-color: var(--color-bg-tertiary);
+      color: var(--color-text-tertiary);
+      cursor: not-allowed;
+    }
+
+    .panels-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-request {
+      flex: 0 0 auto;
+      max-height: 45vh;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .panel-response {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .panel-tabs {
+      display: flex;
+      align-items: center;
+      background-color: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 24px;
+      gap: 0;
+    }
+
+    .panel-tab {
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .panel-tab:hover {
+      color: var(--color-text-primary);
+    }
+
+    .panel-tab.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+    }
+
+    .panel-tab .tab-badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 10px;
+      background-color: var(--color-bg-tertiary);
+      color: var(--color-text-tertiary);
+    }
+
+    .panel-tab.active .tab-badge {
+      background-color: var(--color-accent);
+      color: var(--color-accent-text);
+    }
+
+    .response-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+      padding-right: 0;
+    }
+
+    .response-meta-item {
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .panel-body {
+      padding: 16px 24px;
+      overflow-y: auto;
+      flex: 1;
+      background-color: var(--color-bg-primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .kv-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .kv-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-text-tertiary);
+      background-color: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .kv-table td {
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: middle;
+    }
+
+    .kv-table .kv-checkbox {
+      width: 30px;
+      text-align: center;
+    }
+
+    .kv-table input[type="checkbox"] {
+      accent-color: var(--color-accent);
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+    }
+
+    .kv-table input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      background-color: transparent;
+      color: var(--color-text-primary);
+      outline: none;
+      transition: border-color var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .kv-table input[type="text"]:focus {
+      border-color: var(--color-accent);
+      background-color: var(--color-surface);
+    }
+
+    .kv-table input[type="text"]::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    .kv-row-delete {
+      width: 30px;
+      text-align: center;
+    }
+
+    .kv-delete-btn {
+      background: none;
+      border: none;
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      transition: color var(--transition-fast), background-color var(--transition-fast);
+      line-height: 1;
+    }
+
+    .kv-delete-btn:hover {
+      color: var(--color-danger);
+      background-color: var(--color-danger-bg);
+    }
+
+    .kv-add-btn {
+      margin-top: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      background: none;
+      border: 1px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: color var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .kv-add-btn:hover {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+
+    .auth-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .auth-type-selector {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      width: fit-content;
+    }
+
+    .auth-type-btn {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      color: var(--color-text-secondary);
+      background-color: var(--color-surface);
+      border: none;
+      border-right: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: background-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .auth-type-btn:last-child {
+      border-right: none;
+    }
+
+    .auth-type-btn:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .auth-type-btn.active {
+      background-color: var(--color-accent);
+      color: var(--color-accent-text);
+    }
+
+    .auth-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 500px;
+    }
+
+    .auth-field-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      margin-bottom: 2px;
+    }
+
+    .auth-field-input {
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background-color: var(--color-surface);
+      color: var(--color-text-primary);
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+
+    .auth-field-input:focus {
+      border-color: var(--color-accent);
+    }
+
+    .auth-field-input::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    .auth-field-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .auth-field-row .auth-field-group {
+      flex: 1;
+    }
+
+    .body-editor {
+      width: 100%;
+      min-height: 180px;
+      padding: 12px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background-color: var(--color-surface);
+      color: var(--color-text-primary);
+      resize: vertical;
+      outline: none;
+      transition: border-color var(--transition-fast);
+    }
+
+    .body-editor:focus {
+      border-color: var(--color-accent);
+    }
+
+    .body-editor::placeholder {
+      color: var(--color-text-tertiary);
+    }
+
+    .body-type-selector {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      width: fit-content;
+      margin-bottom: 12px;
+    }
+
+    .body-type-btn {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      color: var(--color-text-secondary);
+      background-color: var(--color-surface);
+      border: none;
+      border-right: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: background-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .body-type-btn:last-child {
+      border-right: none;
+    }
+
+    .body-type-btn:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .body-type-btn.active {
+      background-color: var(--color-accent);
+      color: var(--color-accent-text);
+    }
+
+    .response-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      color: var(--color-text-tertiary);
+      text-align: center;
+      gap: 8px;
+    }
+
+    .response-empty-icon {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+
+    .response-empty-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+    }
+
+    .response-empty-desc {
+      font-size: 12px;
+    }
+
+    .response-body-content {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .response-body-content .json-key { color: var(--color-json-key); }
+    .response-body-content .json-string { color: var(--color-json-string); }
+    .response-body-content .json-number { color: var(--color-json-number); }
+    .response-body-content .json-boolean { color: var(--color-json-boolean); }
+    .response-body-content .json-null { color: var(--color-json-null); }
+
+    .response-headers-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .response-headers-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-text-tertiary);
+      background-color: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .response-headers-table td {
+      padding: 8px 12px;
+      font-size: 12px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .response-headers-table td:first-child {
+      font-weight: 600;
+      color: var(--color-accent);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+
+    .response-headers-table td:last-child {
+      font-family: var(--font-mono);
+      color: var(--color-text-secondary);
+      word-break: break-all;
+    }
+
+    .response-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 24px;
+      background-color: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .response-toolbar-btn {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+    }
+
+    .response-toolbar-btn:hover {
+      color: var(--color-text-primary);
+      border-color: var(--color-border-strong);
+      background-color: var(--color-surface-hover);
+    }
+
+    .response-toolbar-btn.active {
+      background-color: var(--color-accent);
+      color: var(--color-accent-text);
+      border-color: var(--color-accent);
+    }
+
+    .status-success { color: var(--color-success); background-color: var(--color-success-bg); }
+    .status-warning { color: var(--color-warning); background-color: var(--color-warning-bg); }
+    .status-danger { color: var(--color-danger); background-color: var(--color-danger-bg); }
+    .status-info { color: var(--color-info); background-color: var(--color-info-bg); }
+
+    .loading-indicator {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      gap: 12px;
+      color: var(--color-text-secondary);
+    }
+
+    .loading-indicator.visible {
+      display: flex;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--color-border);
+      border-top-color: var(--color-accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .mobile-sidebar-toggle {
+      display: none;
+      padding: 6px 10px;
+      font-size: 18px;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: background-color var(--transition-fast);
+      line-height: 1;
+    }
+
+    .mobile-sidebar-toggle:hover {
+      background-color: var(--color-surface-hover);
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      z-index: 90;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: var(--font-sans);
+      color: var(--color-accent-text);
+      background-color: var(--color-success);
+      transform: translateY(100px);
+      transition: transform 0.3s ease;
+      z-index: 200;
+    }
+
+    .toast.visible {
+      transform: translateY(0);
+    }
+
+    .connection-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background-color: var(--color-surface);
+      color: var(--color-text-secondary);
+      letter-spacing: 0.3px;
+    }
+
+    .connection-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--color-text-tertiary);
+    }
+
+    .connection-badge.proxy .connection-dot {
+      background-color: var(--color-success);
+    }
+
+    .connection-badge.direct .connection-dot {
+      background-color: var(--color-warning);
+    }
+
+    @media (max-width: 768px) {
+      .mobile-sidebar-toggle {
+        display: flex;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        height: 100vh;
+        z-index: 100;
+        transition: left var(--transition-normal);
+        width: 280px;
+        min-width: 280px;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      .url-bar {
+        padding: 12px 16px;
+      }
+
+      .method-select {
+        min-width: 80px;
+        padding: 10px 8px;
+        font-size: 12px;
+      }
+
+      .send-btn {
+        padding: 10px 16px;
+        font-size: 12px;
+      }
+
+      .panel-tabs {
+        padding: 0 12px;
+        overflow-x: auto;
+      }
+
+      .panel-body {
+        padding: 12px 16px;
+      }
+
+      .response-toolbar {
+        padding: 8px 16px;
+      }
+
+      .auth-field-row {
+        flex-direction: column;
+      }
+
+      .response-meta {
+        display: none;
+      }
+
+      .response-meta-mobile {
+        display: flex !important;
+        gap: 8px;
+        padding: 8px 16px;
+        background-color: var(--color-bg-secondary);
+        border-bottom: 1px solid var(--color-border);
+        flex-wrap: wrap;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .response-meta-mobile {
+        display: none !important;
+      }
+    }
+
+    .error-banner {
+      display: none;
+      padding: 12px 24px;
+      background-color: var(--color-danger-bg);
+      border-bottom: 1px solid var(--color-danger);
+      color: var(--color-danger);
+      font-size: 13px;
+      font-weight: 500;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .error-banner.visible {
+      display: flex;
+    }
+
+    .error-banner-close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--color-danger);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      line-height: 1;
+    }
+
+    .error-banner-close:hover {
+      background-color: var(--color-danger);
+      color: var(--color-accent-text);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <button id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-    <h1>Simple API Tester</h1>
-    <label for="method">Method</label>
-    <select id="method">
-      <option>GET</option>
-      <option>POST</option>
-      <option>PUT</option>
-      <option>PATCH</option>
-      <option>DELETE</option>
-      <option>OPTIONS</option>
-      <option>HEAD</option>
-    </select>
-
-    <label for="url">URL</label>
-    <input type="text" id="url" placeholder="https://api.example.com/data" />
-
-    <label>Authorization</label>
-    <div class="radio-group">
-      <label><input type="radio" name="auth" value="none" checked onclick="toggleAuth()"> None</label>
-      <label><input type="radio" name="auth" value="bearer" onclick="toggleAuth()"> Bearer Token</label>
-      <label><input type="radio" name="auth" value="basic" onclick="toggleAuth()"> Basic Auth</label>
-      <label><input type="radio" name="auth" value="custom" onclick="toggleAuth()"> Custom</label>
+  <header class="app-header">
+    <div class="app-logo">
+      <button class="mobile-sidebar-toggle" id="sidebarToggleBtn" aria-label="Toggle history sidebar">☰</button>
+      <img class="app-logo-icon" src="https://raw.githubusercontent.com/ferdysetiawan/ferdysetiawan.github.io/refs/heads/main/public/media/images/icon.png" alt="ANTARAPI Logo">
+      <span class="app-logo-text">ANTARAPI</span>
     </div>
+    <div class="header-actions">
+      <div class="connection-badge" id="connectionBadge" title="Checking connection...">
+        <span class="connection-dot" id="connectionDot"></span>
+        <span id="connectionLabel">Checking...</span>
+      </div>
+      <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle theme">
+        <span class="theme-toggle-icon" id="themeIcon">☀</span>
+        <span id="themeLabel">Light</span>
+      </button>
+    </div>
+  </header>
 
-    <div id="authFields"></div>
+  <div class="app-main">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">History</span>
+        <button class="sidebar-clear-btn" id="clearHistoryBtn">Clear</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty" id="historyEmpty">No requests yet</div>
+      </div>
+    </aside>
 
-    <label for="headers">Headers (JSON format)</label>
-    <textarea id="headers" rows="4" placeholder='{"Content-Type": "application/json"}'></textarea>
+    <main class="workspace">
+      <div class="url-bar">
+        <select class="method-select" id="methodSelect">
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="PATCH">PATCH</option>
+          <option value="DELETE">DELETE</option>
+          <option value="OPTIONS">OPTIONS</option>
+          <option value="HEAD">HEAD</option>
+        </select>
+        <input class="url-input" type="text" id="urlInput" placeholder="Enter request URL" spellcheck="false">
+        <button class="send-btn" id="sendBtn">Send</button>
+      </div>
 
-    <label for="body">Body (for POST/PUT/PATCH)</label>
-    <textarea id="body" rows="6" placeholder='{"name": "John"}'></textarea>
+      <div class="error-banner" id="errorBanner">
+        <span id="errorBannerText"></span>
+        <button class="error-banner-close" id="errorBannerClose">✕</button>
+      </div>
 
-    <button onclick="sendRequest()">Send Request</button>
-    <label for="response">Response</label>
-    <textarea id="response" rows="10" readonly></textarea>
+      <div class="panels-container">
+        <div class="panel panel-request">
+          <div class="panel-tabs">
+            <button class="panel-tab active" data-target="tab-params">Params <span class="tab-badge" id="paramsBadge">0</span></button>
+            <button class="panel-tab" data-target="tab-headers">Headers <span class="tab-badge" id="headersBadge">0</span></button>
+            <button class="panel-tab" data-target="tab-auth">Auth</button>
+            <button class="panel-tab" data-target="tab-body">Body</button>
+          </div>
+          <div class="panel-body">
+            <div class="tab-content active" id="tab-params">
+              <table class="kv-table" id="paramsTable">
+                <thead>
+                  <tr>
+                    <th class="kv-checkbox"></th>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th>Description</th>
+                    <th class="kv-row-delete"></th>
+                  </tr>
+                </thead>
+                <tbody id="paramsTableBody"></tbody>
+              </table>
+              <button class="kv-add-btn" id="addParamBtn">+ Add Parameter</button>
+            </div>
+
+            <div class="tab-content" id="tab-headers">
+              <table class="kv-table" id="headersTable">
+                <thead>
+                  <tr>
+                    <th class="kv-checkbox"></th>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th>Description</th>
+                    <th class="kv-row-delete"></th>
+                  </tr>
+                </thead>
+                <tbody id="headersTableBody"></tbody>
+              </table>
+              <button class="kv-add-btn" id="addHeaderBtn">+ Add Header</button>
+            </div>
+
+            <div class="tab-content" id="tab-auth">
+              <div class="auth-section">
+                <div class="auth-type-selector">
+                  <button class="auth-type-btn active" data-auth="none">None</button>
+                  <button class="auth-type-btn" data-auth="bearer">Bearer Token</button>
+                  <button class="auth-type-btn" data-auth="basic">Basic Auth</button>
+                  <button class="auth-type-btn" data-auth="apikey">API Key</button>
+                </div>
+                <div class="auth-fields" id="authFields"></div>
+              </div>
+            </div>
+
+            <div class="tab-content" id="tab-body">
+              <div class="body-type-selector">
+                <button class="body-type-btn active" data-body="none">None</button>
+                <button class="body-type-btn" data-body="json">JSON</button>
+                <button class="body-type-btn" data-body="text">Text</button>
+                <button class="body-type-btn" data-body="xml">XML</button>
+                <button class="body-type-btn" data-body="form">Form URL Encoded</button>
+              </div>
+              <div id="bodyEditorContainer"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-response">
+          <div class="panel-tabs">
+            <button class="panel-tab active" data-target="tab-response-body">Body</button>
+            <button class="panel-tab" data-target="tab-response-headers">Headers <span class="tab-badge" id="responseHeadersBadge">0</span></button>
+            <div class="response-meta" id="responseMeta" style="display:none;">
+              <span class="response-meta-item" id="responseStatus"></span>
+              <span class="response-meta-item status-info" id="responseTime"></span>
+              <span class="response-meta-item status-info" id="responseSize"></span>
+            </div>
+          </div>
+          <div class="response-meta-mobile" id="responseMetaMobile" style="display:none;">
+            <span class="response-meta-item" id="responseStatusMobile"></span>
+            <span class="response-meta-item status-info" id="responseTimeMobile"></span>
+            <span class="response-meta-item status-info" id="responseSizeMobile"></span>
+          </div>
+          <div class="response-toolbar" id="responseToolbar" style="display:none;">
+            <button class="response-toolbar-btn active" id="prettyBtn">Pretty</button>
+            <button class="response-toolbar-btn" id="rawBtn">Raw</button>
+            <button class="response-toolbar-btn" id="copyResponseBtn">Copy</button>
+          </div>
+          <div class="panel-body" id="responsePanelBody">
+            <div class="tab-content active" id="tab-response-body">
+              <div class="response-empty" id="responseEmpty">
+
+                <div class="response-empty-title">Enter a URL and click Send</div>
+                <div class="response-empty-desc">Response will appear here</div>
+              </div>
+              <div class="loading-indicator" id="loadingIndicator">
+                <div class="spinner"></div>
+                <span>Sending request...</span>
+              </div>
+              <div class="response-body-content" id="responseBodyContent" style="display:none;"></div>
+            </div>
+            <div class="tab-content" id="tab-response-headers">
+              <table class="response-headers-table" id="responseHeadersTable">
+                <thead>
+                  <tr>
+                    <th>Header</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody id="responseHeadersBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <script>
-    function toggleAuth() {
-      const auth = document.querySelector('input[name="auth"]:checked').value;
-      const container = document.getElementById('authFields');
-      container.innerHTML = '';
-      if (auth === 'bearer') {
-        container.innerHTML = '<input type="text" id="bearerToken" placeholder="Bearer Token">';
-      } else if (auth === 'basic') {
-        container.innerHTML = '<div class="auth-group">' +
-          '<input type="text" id="username" placeholder="Username">' +
-          '<input type="password" id="password" placeholder="Password">' +
-          '</div>';
-      } else if (auth === 'custom') {
-        container.innerHTML = '<input type="text" id="customAuth" placeholder="Authorization">';
-      }
+    const STATE = {
+      currentAuthType: 'none',
+      currentBodyType: 'none',
+      responseRawText: '',
+      responseIsJson: false,
+      responsePrettyMode: true,
+      history: [],
+      isLoading: false,
+      proxyAvailable: false,
+      proxyBaseUrl: ''
+    };
+
+    const ELEMENTS = {
+      methodSelect: document.getElementById('methodSelect'),
+      urlInput: document.getElementById('urlInput'),
+      sendBtn: document.getElementById('sendBtn'),
+      paramsTableBody: document.getElementById('paramsTableBody'),
+      headersTableBody: document.getElementById('headersTableBody'),
+      authFields: document.getElementById('authFields'),
+      bodyEditorContainer: document.getElementById('bodyEditorContainer'),
+      responseBodyContent: document.getElementById('responseBodyContent'),
+      responseEmpty: document.getElementById('responseEmpty'),
+      loadingIndicator: document.getElementById('loadingIndicator'),
+      responseMeta: document.getElementById('responseMeta'),
+      responseMetaMobile: document.getElementById('responseMetaMobile'),
+      responseStatus: document.getElementById('responseStatus'),
+      responseStatusMobile: document.getElementById('responseStatusMobile'),
+      responseTime: document.getElementById('responseTime'),
+      responseTimeMobile: document.getElementById('responseTimeMobile'),
+      responseSize: document.getElementById('responseSize'),
+      responseSizeMobile: document.getElementById('responseSizeMobile'),
+      responseHeadersBody: document.getElementById('responseHeadersBody'),
+      responseHeadersBadge: document.getElementById('responseHeadersBadge'),
+      responseToolbar: document.getElementById('responseToolbar'),
+      paramsBadge: document.getElementById('paramsBadge'),
+      headersBadge: document.getElementById('headersBadge'),
+      historyList: document.getElementById('historyList'),
+      historyEmpty: document.getElementById('historyEmpty'),
+      errorBanner: document.getElementById('errorBanner'),
+      errorBannerText: document.getElementById('errorBannerText'),
+      sidebar: document.getElementById('sidebar'),
+      sidebarOverlay: document.getElementById('sidebarOverlay'),
+      toast: document.getElementById('toast')
+    };
+
+    function initializeApplication() {
+      setupMethodSelectColor();
+      setupTabNavigation();
+      setupAuthTypeSelector();
+      setupBodyTypeSelector();
+      setupThemeToggle();
+      setupSidebar();
+      setupKeyboardShortcuts();
+      addKvRow(ELEMENTS.paramsTableBody);
+      addKvRow(ELEMENTS.headersTableBody);
+      loadHistoryFromStorage();
+      renderHistoryList();
+      detectProxyServer();
+
+      ELEMENTS.sendBtn.addEventListener('click', executeRequest);
+      document.getElementById('addParamBtn').addEventListener('click', function() { addKvRow(ELEMENTS.paramsTableBody); });
+      document.getElementById('addHeaderBtn').addEventListener('click', function() { addKvRow(ELEMENTS.headersTableBody); });
+      document.getElementById('errorBannerClose').addEventListener('click', hideErrorBanner);
+      document.getElementById('prettyBtn').addEventListener('click', function() { switchResponseView(true); });
+      document.getElementById('rawBtn').addEventListener('click', function() { switchResponseView(false); });
+      document.getElementById('copyResponseBtn').addEventListener('click', copyResponseToClipboard);
+      document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
     }
 
-    function sendRequest() {
-      const method = document.getElementById('method').value;
-      const url = document.getElementById('url').value;
-      const headersInput = document.getElementById('headers').value;
-      let headers;
-      try {
-        headers = headersInput ? JSON.parse(headersInput) : {};
-      } catch (e) {
-        document.getElementById('response').value = 'Invalid headers JSON';
+    function detectProxyServer() {
+      var badge = document.getElementById('connectionBadge');
+      var label = document.getElementById('connectionLabel');
+      var origin = window.location.origin;
+
+      if (window.location.protocol === 'file:') {
+        setConnectionDirect();
         return;
       }
-      const body = document.getElementById('body').value;
-      const auth = document.querySelector('input[name="auth"]:checked').value;
 
-      if (auth === 'bearer') {
-        headers['Authorization'] = 'Bearer ' + document.getElementById('bearerToken').value;
-      } else if (auth === 'basic') {
-        const user = document.getElementById('username').value;
-        const pass = document.getElementById('password').value;
-        headers['Authorization'] = 'Basic ' + btoa(user + ':' + pass);
-      } else if (auth === 'custom') {
-        headers['Authorization'] = document.getElementById('customAuth').value;
+      fetch(origin + '/health', { method: 'GET' })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data && data.proxy === true) {
+            STATE.proxyAvailable = true;
+            STATE.proxyBaseUrl = origin;
+            setConnectionProxy();
+          } else {
+            setConnectionDirect();
+          }
+        })
+        .catch(function() {
+          setConnectionDirect();
+        });
+    }
+
+    function setConnectionProxy() {
+      var badge = document.getElementById('connectionBadge');
+      var label = document.getElementById('connectionLabel');
+      badge.className = 'connection-badge proxy';
+      badge.title = 'Requests are sent through the proxy server — no CORS restrictions, full response headers';
+      label.textContent = 'Proxy';
+    }
+
+    function setConnectionDirect() {
+      var badge = document.getElementById('connectionBadge');
+      var label = document.getElementById('connectionLabel');
+      STATE.proxyAvailable = false;
+      badge.className = 'connection-badge direct';
+      badge.title = 'Requests are sent directly from the browser — may be blocked by CORS';
+      label.textContent = 'Direct';
+    }
+
+    function setupMethodSelectColor() {
+      var select = ELEMENTS.methodSelect;
+      function updateColor() {
+        var method = select.value.toLowerCase();
+        select.style.color = 'var(--color-method-' + method + ')';
+      }
+      select.addEventListener('change', updateColor);
+      updateColor();
+    }
+
+    function setupTabNavigation() {
+      document.querySelectorAll('.panel-tabs').forEach(function(tabBar) {
+        tabBar.querySelectorAll('.panel-tab[data-target]').forEach(function(tab) {
+          tab.addEventListener('click', function() {
+            var panel = tabBar.closest('.panel');
+            var panelBody = panel.querySelector('.panel-body');
+            tabBar.querySelectorAll('.panel-tab[data-target]').forEach(function(t) { t.classList.remove('active'); });
+            tab.classList.add('active');
+            panelBody.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            document.getElementById(tab.dataset.target).classList.add('active');
+          });
+        });
+      });
+    }
+
+    function setupAuthTypeSelector() {
+      document.querySelectorAll('.auth-type-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.auth-type-btn').forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          STATE.currentAuthType = btn.dataset.auth;
+          renderAuthFields();
+        });
+      });
+    }
+
+    function renderAuthFields() {
+      var container = ELEMENTS.authFields;
+      container.innerHTML = '';
+      if (STATE.currentAuthType === 'bearer') {
+        container.innerHTML =
+          '<div class="auth-field-group">' +
+            '<div class="auth-field-label">Token</div>' +
+            '<input class="auth-field-input" type="text" id="authBearerToken" placeholder="Enter bearer token" spellcheck="false">' +
+          '</div>';
+      } else if (STATE.currentAuthType === 'basic') {
+        container.innerHTML =
+          '<div class="auth-field-row">' +
+            '<div class="auth-field-group">' +
+              '<div class="auth-field-label">Username</div>' +
+              '<input class="auth-field-input" type="text" id="authBasicUser" placeholder="Username" spellcheck="false">' +
+            '</div>' +
+            '<div class="auth-field-group">' +
+              '<div class="auth-field-label">Password</div>' +
+              '<input class="auth-field-input" type="password" id="authBasicPass" placeholder="Password">' +
+            '</div>' +
+          '</div>';
+      } else if (STATE.currentAuthType === 'apikey') {
+        container.innerHTML =
+          '<div class="auth-field-row">' +
+            '<div class="auth-field-group">' +
+              '<div class="auth-field-label">Key</div>' +
+              '<input class="auth-field-input" type="text" id="authApiKeyName" placeholder="X-API-Key" spellcheck="false">' +
+            '</div>' +
+            '<div class="auth-field-group">' +
+              '<div class="auth-field-label">Value</div>' +
+              '<input class="auth-field-input" type="text" id="authApiKeyValue" placeholder="Enter API key" spellcheck="false">' +
+            '</div>' +
+          '</div>' +
+          '<div class="auth-field-group">' +
+            '<div class="auth-field-label">Add to</div>' +
+            '<div class="auth-type-selector">' +
+              '<button class="auth-type-btn active" data-apikey-location="header">Header</button>' +
+              '<button class="auth-type-btn" data-apikey-location="query">Query Params</button>' +
+            '</div>' +
+          '</div>';
+        container.querySelectorAll('[data-apikey-location]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            container.querySelectorAll('[data-apikey-location]').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+          });
+        });
+      }
+    }
+
+    function setupBodyTypeSelector() {
+      document.querySelectorAll('.body-type-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.body-type-btn').forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          STATE.currentBodyType = btn.dataset.body;
+          renderBodyEditor();
+        });
+      });
+    }
+
+    function renderBodyEditor() {
+      var container = ELEMENTS.bodyEditorContainer;
+      container.innerHTML = '';
+      if (STATE.currentBodyType === 'none') return;
+
+      var placeholderMap = {
+        json: '{\n  "key": "value"\n}',
+        text: 'Enter plain text body',
+        xml: '<?xml version="1.0"?>\n<root>\n  <element>value</element>\n</root>',
+        form: 'key1=value1&key2=value2'
+      };
+
+      container.innerHTML = '<textarea class="body-editor" id="bodyEditor" placeholder="' +
+        placeholderMap[STATE.currentBodyType] + '" spellcheck="false"></textarea>';
+    }
+
+    function addKvRow(tbody) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="kv-checkbox"><input type="checkbox" checked></td>' +
+        '<td><input type="text" placeholder="Key" spellcheck="false"></td>' +
+        '<td><input type="text" placeholder="Value" spellcheck="false"></td>' +
+        '<td><input type="text" placeholder="Description" spellcheck="false"></td>' +
+        '<td class="kv-row-delete"><button class="kv-delete-btn">✕</button></td>';
+
+      tr.querySelector('.kv-delete-btn').addEventListener('click', function() {
+        if (tbody.children.length > 1) {
+          tr.remove();
+          updateKvBadge(tbody);
+        }
+      });
+
+      tr.querySelectorAll('input[type="text"]').forEach(function(input) {
+        input.addEventListener('input', function() { updateKvBadge(tbody); });
+      });
+
+      tbody.appendChild(tr);
+      updateKvBadge(tbody);
+    }
+
+    function updateKvBadge(tbody) {
+      var count = 0;
+      tbody.querySelectorAll('tr').forEach(function(row) {
+        var keyInput = row.querySelectorAll('input[type="text"]')[0];
+        var checkbox = row.querySelector('input[type="checkbox"]');
+        if (keyInput && keyInput.value.trim() && checkbox && checkbox.checked) count++;
+      });
+
+      if (tbody.id === 'paramsTableBody') {
+        ELEMENTS.paramsBadge.textContent = count;
+      } else if (tbody.id === 'headersTableBody') {
+        ELEMENTS.headersBadge.textContent = count;
+      }
+    }
+
+    function collectKvPairs(tbody) {
+      var pairs = [];
+      tbody.querySelectorAll('tr').forEach(function(row) {
+        var checkbox = row.querySelector('input[type="checkbox"]');
+        var inputs = row.querySelectorAll('input[type="text"]');
+        if (checkbox && checkbox.checked && inputs[0] && inputs[0].value.trim()) {
+          pairs.push({ key: inputs[0].value.trim(), value: inputs[1] ? inputs[1].value : '' });
+        }
+      });
+      return pairs;
+    }
+
+    function buildRequestUrl() {
+      var rawUrl = ELEMENTS.urlInput.value.trim();
+      if (!rawUrl) return '';
+
+      var params = collectKvPairs(ELEMENTS.paramsTableBody);
+      if (params.length === 0) return rawUrl;
+
+      var separator = rawUrl.indexOf('?') !== -1 ? '&' : '?';
+      var queryString = params.map(function(p) {
+        return encodeURIComponent(p.key) + '=' + encodeURIComponent(p.value);
+      }).join('&');
+
+      return rawUrl + separator + queryString;
+    }
+
+    function buildRequestHeaders() {
+      var headers = {};
+      var headerPairs = collectKvPairs(ELEMENTS.headersTableBody);
+      headerPairs.forEach(function(pair) {
+        headers[pair.key] = pair.value;
+      });
+
+      if (STATE.currentAuthType === 'bearer') {
+        var tokenEl = document.getElementById('authBearerToken');
+        if (tokenEl && tokenEl.value.trim()) {
+          headers['Authorization'] = 'Bearer ' + tokenEl.value.trim();
+        }
+      } else if (STATE.currentAuthType === 'basic') {
+        var userEl = document.getElementById('authBasicUser');
+        var passEl = document.getElementById('authBasicPass');
+        if (userEl && passEl) {
+          headers['Authorization'] = 'Basic ' + btoa(userEl.value + ':' + passEl.value);
+        }
+      } else if (STATE.currentAuthType === 'apikey') {
+        var locationBtn = document.querySelector('[data-apikey-location].active');
+        var location = locationBtn ? locationBtn.dataset.apikeyLocation : 'header';
+        if (location === 'header') {
+          var keyNameEl = document.getElementById('authApiKeyName');
+          var keyValueEl = document.getElementById('authApiKeyValue');
+          if (keyNameEl && keyValueEl && keyNameEl.value.trim()) {
+            headers[keyNameEl.value.trim()] = keyValueEl.value;
+          }
+        }
       }
 
-      fetch(url, {
-        method,
-        headers,
-        body: ["GET", "HEAD"].includes(method) ? null : body
-      })
-      .then(res => res.text())
-      .then(text => document.getElementById('response').value = text)
-      .catch(err => document.getElementById('response').value = 'Error: ' + err);
+      if (STATE.currentBodyType === 'json' && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/json';
+      } else if (STATE.currentBodyType === 'xml' && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/xml';
+      } else if (STATE.currentBodyType === 'form' && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/x-www-form-urlencoded';
+      } else if (STATE.currentBodyType === 'text' && !headers['Content-Type']) {
+        headers['Content-Type'] = 'text/plain';
+      }
+
+      return headers;
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      const btn = document.getElementById('darkModeToggle');
-      btn.textContent = document.body.classList.contains('dark-mode') ? '🌞 Light Mode' : '🌙 Dark Mode';
+    function buildRequestBody() {
+      var method = ELEMENTS.methodSelect.value;
+      if (method === 'GET' || method === 'HEAD') return null;
+      if (STATE.currentBodyType === 'none') return null;
+
+      var editorEl = document.getElementById('bodyEditor');
+      if (!editorEl) return null;
+      return editorEl.value || null;
     }
+
+    function buildFinalUrl() {
+      var url = buildRequestUrl();
+      if (STATE.currentAuthType === 'apikey') {
+        var locationBtn = document.querySelector('[data-apikey-location].active');
+        var location = locationBtn ? locationBtn.dataset.apikeyLocation : 'header';
+        if (location === 'query') {
+          var keyNameEl = document.getElementById('authApiKeyName');
+          var keyValueEl = document.getElementById('authApiKeyValue');
+          if (keyNameEl && keyValueEl && keyNameEl.value.trim()) {
+            var sep = url.indexOf('?') !== -1 ? '&' : '?';
+            url += sep + encodeURIComponent(keyNameEl.value.trim()) + '=' + encodeURIComponent(keyValueEl.value);
+          }
+        }
+      }
+      return url;
+    }
+
+    function validateRequestUrl(url) {
+      if (!url) return 'URL is required';
+      try {
+        new URL(url);
+        return null;
+      } catch (e) {
+        return 'Invalid URL format. Please include the protocol (e.g., https://)';
+      }
+    }
+
+    function executeRequest() {
+      if (STATE.isLoading) return;
+
+      var url = buildFinalUrl();
+      var validationError = validateRequestUrl(url);
+      if (validationError) {
+        showErrorBanner(validationError);
+        return;
+      }
+
+      hideErrorBanner();
+      setLoadingState(true);
+
+      var method = ELEMENTS.methodSelect.value;
+      var headers = buildRequestHeaders();
+      var body = buildRequestBody();
+
+      if (STATE.proxyAvailable) {
+        executeViaProxy(method, url, headers, body);
+      } else {
+        executeViaDirect(method, url, headers, body);
+      }
+    }
+
+    function executeViaProxy(method, url, headers, body) {
+      var proxyPayload = {
+        method: method,
+        url: url,
+        headers: headers
+      };
+      if (body !== null) {
+        proxyPayload.body = body;
+      }
+
+      fetch(STATE.proxyBaseUrl + '/proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(proxyPayload)
+      })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          setLoadingState(false);
+          if (data.error) {
+            renderErrorResponse({ message: data.error + (data.code ? ' (' + data.code + ')' : '') }, data.time || 0);
+            addHistoryEntry(method, url, 0);
+            return;
+          }
+          var result = {
+            status: data.status,
+            statusText: data.statusText,
+            headers: data.headers,
+            body: data.body,
+            time: data.time,
+            size: data.size
+          };
+          renderResponse(result);
+          addHistoryEntry(method, url, result.status);
+        })
+        .catch(function(error) {
+          setLoadingState(false);
+          renderErrorResponse(error, 0);
+          addHistoryEntry(method, url, 0);
+        });
+    }
+
+    function executeViaDirect(method, url, headers, body) {
+      var startTime = performance.now();
+      var fetchOptions = { method: method, headers: headers };
+      if (body !== null) {
+        fetchOptions.body = body;
+      }
+
+      fetch(url, fetchOptions)
+        .then(function(response) {
+          var endTime = performance.now();
+          var duration = Math.round(endTime - startTime);
+          var status = response.status;
+          var statusText = response.statusText;
+          var responseHeaders = {};
+          response.headers.forEach(function(value, key) {
+            responseHeaders[key] = value;
+          });
+
+          return response.text().then(function(text) {
+            return {
+              status: status,
+              statusText: statusText,
+              headers: responseHeaders,
+              body: text,
+              time: duration,
+              size: new Blob([text]).size
+            };
+          });
+        })
+        .then(function(result) {
+          setLoadingState(false);
+          renderResponse(result);
+          addHistoryEntry(method, url, result.status);
+        })
+        .catch(function(error) {
+          var endTime = performance.now();
+          var duration = Math.round(endTime - startTime);
+          setLoadingState(false);
+          renderErrorResponse(error, duration);
+          addHistoryEntry(method, url, 0);
+        });
+    }
+
+    function setLoadingState(loading) {
+      STATE.isLoading = loading;
+      ELEMENTS.sendBtn.disabled = loading;
+      ELEMENTS.sendBtn.textContent = loading ? 'Sending...' : 'Send';
+      ELEMENTS.loadingIndicator.classList.toggle('visible', loading);
+      if (loading) {
+        ELEMENTS.responseEmpty.style.display = 'none';
+        ELEMENTS.responseBodyContent.style.display = 'none';
+      }
+    }
+
+    function renderResponse(result) {
+      renderResponseMeta(result.status, result.statusText, result.time, result.size);
+      renderResponseHeaders(result.headers);
+
+      STATE.responseRawText = result.body;
+      STATE.responseIsJson = isJsonString(result.body);
+      STATE.responsePrettyMode = true;
+
+      ELEMENTS.responseToolbar.style.display = 'flex';
+      document.getElementById('prettyBtn').classList.add('active');
+      document.getElementById('rawBtn').classList.remove('active');
+
+      renderResponseBody();
+    }
+
+    function renderErrorResponse(error, duration) {
+      ELEMENTS.responseMeta.style.display = 'flex';
+      ELEMENTS.responseMetaMobile.style.display = '';
+      ELEMENTS.responseStatus.textContent = 'Error';
+      ELEMENTS.responseStatus.className = 'response-meta-item status-danger';
+      ELEMENTS.responseStatusMobile.textContent = 'Error';
+      ELEMENTS.responseStatusMobile.className = 'response-meta-item status-danger';
+      ELEMENTS.responseTime.textContent = duration + ' ms';
+      ELEMENTS.responseTimeMobile.textContent = duration + ' ms';
+      ELEMENTS.responseSize.textContent = '';
+      ELEMENTS.responseSizeMobile.textContent = '';
+
+      STATE.responseRawText = 'Error: ' + error.message + '\n\nThis could be caused by:\n- CORS policy blocking the request\n- Network connectivity issues\n- Invalid URL or server not responding\n- SSL/TLS certificate errors';
+      STATE.responseIsJson = false;
+      STATE.responsePrettyMode = false;
+
+      ELEMENTS.responseToolbar.style.display = 'flex';
+      renderResponseBody();
+    }
+
+    function renderResponseMeta(status, statusText, time, size) {
+      var statusClass = getStatusClass(status);
+      var statusLabel = status + ' ' + statusText;
+      var sizeLabel = formatBytes(size);
+
+      ELEMENTS.responseMeta.style.display = 'flex';
+      ELEMENTS.responseMetaMobile.style.display = '';
+      ELEMENTS.responseStatus.textContent = statusLabel;
+      ELEMENTS.responseStatus.className = 'response-meta-item ' + statusClass;
+      ELEMENTS.responseStatusMobile.textContent = statusLabel;
+      ELEMENTS.responseStatusMobile.className = 'response-meta-item ' + statusClass;
+      ELEMENTS.responseTime.textContent = time + ' ms';
+      ELEMENTS.responseTimeMobile.textContent = time + ' ms';
+      ELEMENTS.responseSize.textContent = sizeLabel;
+      ELEMENTS.responseSizeMobile.textContent = sizeLabel;
+    }
+
+    function getStatusClass(status) {
+      if (status >= 200 && status < 300) return 'status-success';
+      if (status >= 300 && status < 400) return 'status-info';
+      if (status >= 400 && status < 500) return 'status-warning';
+      return 'status-danger';
+    }
+
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function renderResponseHeaders(headers) {
+      var tbody = ELEMENTS.responseHeadersBody;
+      tbody.innerHTML = '';
+      var count = 0;
+      Object.keys(headers).forEach(function(key) {
+        var tr = document.createElement('tr');
+        var tdKey = document.createElement('td');
+        tdKey.textContent = key;
+        var tdVal = document.createElement('td');
+        tdVal.textContent = headers[key];
+        tr.appendChild(tdKey);
+        tr.appendChild(tdVal);
+        tbody.appendChild(tr);
+        count++;
+      });
+      ELEMENTS.responseHeadersBadge.textContent = count;
+    }
+
+    function renderResponseBody() {
+      ELEMENTS.responseEmpty.style.display = 'none';
+      ELEMENTS.loadingIndicator.classList.remove('visible');
+      ELEMENTS.responseBodyContent.style.display = 'block';
+
+      if (STATE.responsePrettyMode && STATE.responseIsJson) {
+        ELEMENTS.responseBodyContent.innerHTML = syntaxHighlightJson(STATE.responseRawText);
+      } else {
+        ELEMENTS.responseBodyContent.textContent = STATE.responseRawText;
+      }
+    }
+
+    function switchResponseView(pretty) {
+      STATE.responsePrettyMode = pretty;
+      document.getElementById('prettyBtn').classList.toggle('active', pretty);
+      document.getElementById('rawBtn').classList.toggle('active', !pretty);
+      renderResponseBody();
+    }
+
+    function isJsonString(str) {
+      if (!str || typeof str !== 'string') return false;
+      var trimmed = str.trim();
+      if ((trimmed[0] !== '{' && trimmed[0] !== '[')) return false;
+      try {
+        JSON.parse(trimmed);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function syntaxHighlightJson(jsonStr) {
+      try {
+        var parsed = JSON.parse(jsonStr);
+        var formatted = JSON.stringify(parsed, null, 2);
+        return formatted.replace(/("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+          var cls = 'json-number';
+          if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+              cls = 'json-key';
+            } else {
+              cls = 'json-string';
+            }
+          } else if (/true|false/.test(match)) {
+            cls = 'json-boolean';
+          } else if (/null/.test(match)) {
+            cls = 'json-null';
+          }
+          return '<span class="' + cls + '">' + escapeHtml(match) + '</span>';
+        });
+      } catch (e) {
+        return escapeHtml(jsonStr);
+      }
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    function copyResponseToClipboard() {
+      if (!STATE.responseRawText) return;
+      navigator.clipboard.writeText(STATE.responseRawText).then(function() {
+        showToast('Response copied to clipboard');
+      }).catch(function() {
+        showToast('Failed to copy');
+      });
+    }
+
+    function addHistoryEntry(method, url, status) {
+      var entry = { method: method, url: url, status: status, timestamp: Date.now() };
+      STATE.history.unshift(entry);
+      if (STATE.history.length > 50) STATE.history.pop();
+      saveHistoryToStorage();
+      renderHistoryList();
+    }
+
+    function renderHistoryList() {
+      ELEMENTS.historyList.innerHTML = '';
+      if (STATE.history.length === 0) {
+        ELEMENTS.historyList.innerHTML = '<div class="history-empty">No requests yet</div>';
+        return;
+      }
+      STATE.history.forEach(function(entry) {
+        var item = document.createElement('button');
+        item.className = 'history-item';
+        var methodColor = 'var(--color-method-' + entry.method.toLowerCase() + ')';
+        var statusClass = entry.status === 0 ? 'status-danger' : getStatusClass(entry.status);
+        var displayUrl = entry.url;
+        try {
+          var urlObj = new URL(entry.url);
+          displayUrl = urlObj.pathname + urlObj.search;
+        } catch (e) {}
+
+        item.innerHTML =
+          '<span class="history-method" style="background-color:' + methodColor + '">' + entry.method + '</span>' +
+          '<span class="history-url">' + escapeHtml(displayUrl) + '</span>' +
+          '<span class="history-status ' + statusClass + '">' + (entry.status === 0 ? 'ERR' : entry.status) + '</span>';
+
+        item.addEventListener('click', function() {
+          loadHistoryEntry(entry);
+        });
+
+        ELEMENTS.historyList.appendChild(item);
+      });
+    }
+
+    function loadHistoryEntry(entry) {
+      ELEMENTS.methodSelect.value = entry.method;
+      setupMethodSelectColor();
+      try {
+        var urlObj = new URL(entry.url);
+        ELEMENTS.urlInput.value = urlObj.origin + urlObj.pathname;
+      } catch (e) {
+        ELEMENTS.urlInput.value = entry.url;
+      }
+      closeSidebar();
+    }
+
+    function clearHistory() {
+      STATE.history = [];
+      saveHistoryToStorage();
+      renderHistoryList();
+    }
+
+    function saveHistoryToStorage() {
+      try {
+        localStorage.setItem('apitools_history', JSON.stringify(STATE.history));
+      } catch (e) {}
+    }
+
+    function loadHistoryFromStorage() {
+      try {
+        var saved = localStorage.getItem('apitools_history');
+        if (saved) {
+          STATE.history = JSON.parse(saved);
+        }
+      } catch (e) {
+        STATE.history = [];
+      }
+    }
+
+    function setupThemeToggle() {
+      var themeBtn = document.getElementById('themeToggleBtn');
+      var saved = localStorage.getItem('apitools_theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+      updateThemeToggleLabel();
+      themeBtn.addEventListener('click', toggleTheme);
+    }
+
+    function toggleTheme() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('apitools_theme', next);
+      updateThemeToggleLabel();
+    }
+
+    function updateThemeToggleLabel() {
+      var theme = document.documentElement.getAttribute('data-theme');
+      document.getElementById('themeIcon').textContent = theme === 'dark' ? '☀' : '☾';
+      document.getElementById('themeLabel').textContent = theme === 'dark' ? 'Light' : 'Dark';
+    }
+
+    function setupSidebar() {
+      document.getElementById('sidebarToggleBtn').addEventListener('click', function() {
+        ELEMENTS.sidebar.classList.toggle('open');
+        ELEMENTS.sidebarOverlay.classList.toggle('open');
+      });
+      ELEMENTS.sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+    function closeSidebar() {
+      ELEMENTS.sidebar.classList.remove('open');
+      ELEMENTS.sidebarOverlay.classList.remove('open');
+    }
+
+    function setupKeyboardShortcuts() {
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          executeRequest();
+        }
+      });
+
+      ELEMENTS.urlInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          executeRequest();
+        }
+      });
+    }
+
+    function showErrorBanner(message) {
+      ELEMENTS.errorBannerText.textContent = message;
+      ELEMENTS.errorBanner.classList.add('visible');
+    }
+
+    function hideErrorBanner() {
+      ELEMENTS.errorBanner.classList.remove('visible');
+    }
+
+    function showToast(message) {
+      ELEMENTS.toast.textContent = message;
+      ELEMENTS.toast.classList.add('visible');
+      setTimeout(function() {
+        ELEMENTS.toast.classList.remove('visible');
+      }, 2000);
+    }
+
+    initializeApplication();
   </script>
 </body>
 </html>
