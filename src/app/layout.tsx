@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ANTARAPI",
     description: "ANTARAPI — Professional API testing tool with full HTTP method support, authentication, headers management, and response inspection.",
+    url: "https://antarapi.ferdystawn.my.id",
+    siteName: "Antarapi",
     type: "website",
     images: [
       {
@@ -30,6 +32,7 @@ export const metadata: Metadata = {
         alt: "ANTARAPI - Professional API Testing Tool",
       },
     ],
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
