@@ -16,7 +16,7 @@ export default function Home() {
   <header className="app-header">
     <div className="app-logo">
       <button className="mobile-sidebar-toggle" id="sidebarToggleBtn" aria-label="Toggle history sidebar">☰</button>
-      <img className="app-logo-icon" src="https://raw.githubusercontent.com/ferdysetiawan/ferdysetiawan.github.io/refs/heads/main/public/media/images/icon.png" alt="ANTARAPI Logo" />
+      <img className="app-logo-icon" src="/media/icon.png" alt="ANTARAPI Logo" />
       <span className="app-logo-text">ANTARAPI</span>
     </div>
     <div className="header-actions">

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "ANTARAPI",
   description: "ANTARAPI — Professional API testing tool with full HTTP method support, authentication, headers management, and response inspection.",
   icons: {
-    icon: "https://raw.githubusercontent.com/ferdysetiawan/ferdysetiawan.github.io/refs/heads/main/public/media/images/icon.png",
+    icon: "/media/icon.png",
   },
   openGraph: {
     title: "ANTARAPI",
